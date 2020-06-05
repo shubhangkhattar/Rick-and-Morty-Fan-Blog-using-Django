@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+
+<div class="card-body text-info">
+  <h5 class="card-title">Recent Posts</h5>
+  {% for post in latest_posts %}
+  <a>
+    <p class="card-text">
+      <a href="{{post.get_absolute_url}}" class = "text-info">
+      {{post.title}}
+      </a>
+    </p>
+  </a>
+  {% endfor %}
+</div>

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+{% extends 'blog/base.html' %}
+{% load staticfiles %}
+{% load blog_tags %}
+
+
+{% block title_block %} Rick and Morty Blog | Homepage  {% endblock %}
+
+{% block content %}
+
+
+<img src = "{% static "images/rick-and-morty.png" %}" class="img-fluid" alt="Responsive image">
+<h1 id = 'title' class="text-center rounded border border-secondary bg-dark">Rick and Morty Blog</h1>
+
+<hr>
+
+{% if tag %}
+
+
+  <h2> Posts with tag : <span href="#" class="badge badge-secondary">{{tag.name}}</span>
+
+</h2>
+
+{% endif %}
+
+{% if post_list %}
+
+
+
+{% for post in post_list %}
+
+<div class="card">
+
+<div class="card-body">
+
+  <div class="card-title">
+    <h2>{{post.title}}</h2>
+  </div>
+
+  <h6 class="card-subtitle mb-2 text-muted">Published on {{post.publish | date:"d b, Y" }} by {{post.author.get_full_name | title}}</h6>
+
+<div class="card-subtitle mb-2">
+
+{% for tag in post.tags.all %}
+
+  <a href="/tag/{{tag.slug}}" class="badge badge-secondary">{{tag.name}}</a>
+
+<!-- {% if not forloop.last %}
+,
+{%endif%} -->
+
+{% endfor %}
+
+</div>
+
+  <div class="card-text">
+    {{post.body | truncatewords:30 | linebreaks}}
+
+  <a class="btn btn-outline-info btn-sm" href="{{post.get_absolute_url}}">Read More</a>
+
+  </div>
+
+</div>
+</div>
+
+<hr>
+{% endfor %}
+
+{% include 'blog/pagination.html' with page=post_list%}
+
+{% else %}
+
+<p>No Published Blogs yet ... </p>
+{% endif %}
+
+{% endblock %}
+
+
+{% block post_recommended %}
+
+
+<div class="card" style="width: 15rem;">
+  <img class="card-img-top rounded" src="{% static "images/morty.jpeg" %}" alt="Card image cap">
+  <div class="card-body">
+    <h5 class="card-title text-center">Morty Smith</h5>
+    <p class="card-text">This is Sample Blog, developed in order to learn Django Framework</p>
+  </div>
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item">Age : 14 Years</li>
+    <li class="list-group-item">Species : Human</li>
+    <li class="list-group-item">Occupation : Student at Harry Herpson High School</li>
+    <li class="list-group-item">Place of Origin : Earth</li>
+  </ul>
+  {% if not request.user.is_authenticated and not "/accounts/login" in request.get_full_path %}
+  <div class="card-body text-center">
+
+    <button type="button" class="card-link btn btn-info" data-toggle="modal" data-target="#loginModal">Login</button>
+
+    <button type="button" class="card-link btn btn-info" data-toggle="modal" data-target="#signupModal">Sign Up</button>
+
+  </div>
+  {% include 'registration/signup_form.html' with form=share_form %}
+
+
+  {%endif%}
+
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal-dialog" role="document">
+<div class="modal-content">
+<div class="modal-header">
+  <h2 class="modal-title" id="exampleModalLabel">Login</h2>
+</div>
+<form method="post" action="/accounts/login/" >
+  {% csrf_token %}
+
+<div class="modal-body">
+
+    <div class="form-group">
+        <label class="control-label">Username</label>
+        <div>
+          <input type="text"  class="form-control input-lg" name="username" value="" autofocus>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label">Password</label>
+        <div>
+          <input type="password"  class="form-control input-lg" name="password" value="">
+        </div>
+    </div>
+
+</div>
+<div class="modal-footer">
+  <button type="submit" value='share' name='share' class="btn btn-info">Login</button>
+</div>
+</form>
+
+</div>
+</div>
+</div>
+
+
+<div class="card border-info mb-3 mt-3" style="max-width: 18rem;">
+  <div class="card-header">Total Posts Published : {% total_posts %}</div>
+
+  <!-- this is inclusion tag -->
+  {% show_latest_posts 2%}
+
+  <hr>
+  {%get_most_commented_posts as most_commented_post %}
+  <div class="card-body text-info">
+    <h5 class="card-title">Most Commented Posts</h5>
+    {% for post in most_commented_post %}
+    <a>
+      <p class="card-text">
+        <a href="{{post.get_absolute_url}}" class = "text-info">
+          {{post.title}}
+        </a>
+      </p>
+    </a>
+    {% endfor %}
+  </div>
+</div>
+
+
+{% endblock %}

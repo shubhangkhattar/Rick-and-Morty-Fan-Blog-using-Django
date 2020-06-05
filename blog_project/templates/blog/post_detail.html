@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+{% extends 'blog/base.html' %}
+{% load staticfiles %}
+{% load blog_tags %}
+
+{% load widget_tweaks %}
+
+{% block title_block %} {{post.title}}  {% endblock %}
+
+{% block content %}
+
+
+<h1>{{post.title}}</h1>
+<h6 style="display:inline" >Published on {{post.publish | date:"d b, Y" }} by {{post.author | title}}</h6>
+
+<button type="button" class="btn btn-outline-info btn-sm float-right" data-toggle="modal" data-target="#shareModal">Share</button>
+
+
+{%if email_sent %}
+<div style="margin-top: 10px;" class="alert alert-success alert-dismissible fade show float-none" role="alert">
+  Mail Sent
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+{% endif %}
+
+
+<hr>
+{{post.body | linebreaks}}
+
+{% include 'blog/share.html' with form=form %}
+
+<hr>
+<h2>Comment</h2>
+
+
+<form method="post">
+  {% csrf_token %}
+
+
+  <div class="form-group">
+    <label><label for="id_body">Comment:</label></label>
+    <div>
+      <textarea name="body" cols="40" rows="5" class="form-control input-lg" required id="id_body">
+</textarea>
+</div>
+</div>
+
+  <div>
+    <button class= 'btn btn-outline-info'type="submit"name="comment" value="comment">Post</button>
+  </div>
+
+</form>
+
+{%if comment_submit%}
+<div style="margin-top: 10px;" class="alert alert-success alert-dismissible fade show float-none" role="alert">
+  Comment Added
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+{% endif %}
+
+<hr>
+<div class="card">
+  <div class="card-header">
+    {% with comments.count as comments_count %}
+    <h5>
+      Total : {{comments_count}} Comment{{comments_count | pluralize}}
+    </h5>
+    {% endwith %}
+  </div>
+  <ul class="list-group list-group-flush">
+    {% if comments %}
+
+    {% for comment in comments%}
+    <li class="list-group-item">
+      <h6 class="card-title">
+        {{comment.body}}
+      </h6>
+      <p class="card-text text-muted font-italic">
+        By {{comment.name}} on {{comment.created | date:"d b, Y" }}.
+      </p>
+    </li>
+    {% endfor %}
+
+    {% else %}
+
+    <div class="alert alert-danger" role="alert">
+      No comments published yet.
+    </div>
+
+    {% endif %}
+
+  </ul>
+</div>
+
+{% endblock %}
+
+
+
+{% block post_recommended %}
+
+
+<div class="card border-info mb-3 mt-3" style="max-width: 18rem;">
+  <div class="card-header">Total Posts Published : {% total_posts %}</div>
+
+  <!-- this is inclusion tag -->
+  {% show_latest_posts 2%}
+
+  <hr>
+  {%get_most_commented_posts as most_commented_post %}
+  <div class="card-body text-info">
+    <h5 class="card-title">Most Commented Posts</h5>
+    {% for post in most_commented_post %}
+    <a>
+      <p class="card-text">
+        <a href="{{post.get_absolute_url}}" class = "text-info">
+          {{post.title}}
+        </a>
+      </p>
+    </a>
+    {% endfor %}
+  </div>
+</div>
+
+<script>
+if ( window.history.replaceState ) {
+  window.history.replaceState( null, null, window.location.href );
+}
+</script>
+
+
+
+
+{% endblock %}

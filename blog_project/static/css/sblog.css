@@ -1,0 +1,30 @@
+  #title{
+      font-family: 'VT323', monospace;
+      color:   #97CE4C;
+      text-decoration: underline;
+      margin-right: 50px;
+      margin-left: 50px;
+
+  }
+
+
+body { padding-top: 70px; }
+
+#morty{
+  font-size: 22px;
+  font-family: 'VT323', monospace;
+  color:   #97CE4C;
+
+
+}
+
+#morty:hover {
+  text-decoration: underline;
+}
+
+.pagination > .active > a
+{
+    color: white;
+    background-color:    #2F8CA3   !Important;
+    border: solid 1px    #2F8CA3    !Important;
+}
