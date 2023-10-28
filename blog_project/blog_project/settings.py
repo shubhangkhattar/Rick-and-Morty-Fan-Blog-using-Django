@@ -93,7 +93,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'shubhang_db',
         'USER': 'root',
-        'PASSWORD': 'root',
+        'PASSWORD': 'discodancer',
     }
 }
 
