@@ -27,7 +27,7 @@ SECRET_KEY = '@9cq+rh27$fe(uoj@7(61qwhm(kce0nbgr#)sla*n)5j9r%@9c'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 #SMTP MAIL Configuration
@@ -142,7 +142,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [STATIC_DIR]
-
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 LOGOUT_REDIRECT_URL='/'
 LOGIN_REDIRECT_URL='/'

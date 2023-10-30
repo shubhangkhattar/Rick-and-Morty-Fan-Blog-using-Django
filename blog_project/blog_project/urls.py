@@ -18,7 +18,7 @@ from django.urls import path,include
 from blog import views
 
 urlpatterns = [
-    path('khattar/', admin.site.urls,name='admin'),
+    path('admin/', admin.site.urls,name='admin'),
     path('accounts/', include('django.contrib.auth.urls')),
     path('', views.post_list_view),
     path('tag/<tag_slug>/', views.post_list_view),
